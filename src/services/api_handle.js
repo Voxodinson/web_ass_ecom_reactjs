@@ -27,7 +27,7 @@ const apiService = {
         }
     },
 
-  put: async (endpoint, id, data) => {
+    put: async (endpoint, id, data) => {
         try {
             const response = await axios.put(`${BASE_URL}/${endpoint}/${id}`, data);
             return response.data;
