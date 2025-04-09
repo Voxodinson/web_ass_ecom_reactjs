@@ -2,27 +2,23 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 function Product() {
-  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [data, setData] = useState([]);
+
+  const fetchData = async () => {
+    try {
+        const result = await axios.get('http://127.0.0.1:8000/api/public/user/products');
+        setData(result.data.data);
+    } catch (error) {
+        console.error("Error fetching products:", error);
+    }
+  };  
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await axios.get('https://fakestoreapi.com/products');
-        setProducts(response.data);
-        setLoading(false);
-      } catch (err) {
-        console.error('Error fetching products:', err);
-        setError('Failed to load products. Please try again later.');
-        setLoading(false);
-      }
-    };
-
-    fetchProducts();
+    fetchData();
   }, []);
-
-  // Add to Cart Function
+  
   const handleAddToCart = (product) => {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
     const existingItem = cart.find((item) => item.id === product.id);
@@ -52,6 +48,30 @@ function Product() {
     window.location.href = '/checkout'; // Redirect to the checkout page
   };
 
+  const [successMessage, setSuccessMessage] = useState('');
+
+  const addToCart = (product) => {
+    const storedCart = localStorage.getItem('cart');
+    const cartItems = storedCart ? JSON.parse(storedCart) : [];
+    const existingItemIndex = cartItems.findIndex(item => item.id === product.id);
+
+    if (existingItemIndex !== -1) {
+      cartItems[existingItemIndex].quantity = (cartItems[existingItemIndex].quantity || 1) + 1;
+    } else {
+      cartItems.push({ ...product, quantity: 1 });
+    }
+
+    localStorage.setItem('cart', JSON.stringify(cartItems));
+
+    // Set the success message
+    setSuccessMessage(`${product.name} added to cart!`);
+
+    // Clear the success message after a short delay (e.g., 3 seconds)
+    setTimeout(() => {
+      setSuccessMessage('');
+    }, 3000);
+  };
+
   return (
     <>
       {/* Inner Page Section */}
@@ -75,55 +95,33 @@ function Product() {
               Our <span>Products</span>
             </h2>
           </div>
-          <div className="row">
-            {loading && <p>Loading...</p>}
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-            {!loading &&
-              !error &&
-              products.map((product) => (
-                <div key={product.id} className="col-sm-6 col-md-4 col-lg-4">
-                  <div className="box">
-                    <div className="option_container">
-                      <div className="options">
-                        <button
-                          className="option1"
-                          onClick={() =>
-                            handleAddToCart({
-                              id: product.id,
-                              title: product.title,
-                              price: product.price,
-                              image: product.image,
-                            })
-                          }
-                        >
-                          Add To Cart
-                        </button>
-                        <button
-                          className="option2"
-                          onClick={() =>
-                            handleBuyNow({
-                              id: product.id,
-                              title: product.title,
-                              price: product.price,
-                              image: product.image,
-                            })
-                          }
-                        >
-                          Buy Now
-                        </button>
-                      </div>
+          <div className="product-grid">
+                {data.map(product => (
+                    <div key={product.id} className="product-card">
+                        <div className="product-image">
+                            <img 
+                            src={product.image} 
+                            alt={product.title} 
+                            />
+                        </div>
+                        <div className="product-details">
+                            <h5 className="product-title">{product.name}</h5>
+                            <p>{product.description}</p>
+                            <h6 className="product-price">${product.price}</h6>
+                        </div>
+                        <div className="product-actions">
+                            <div className="action-buttons">
+                                <button 
+                                  onClick={() => handleAddToCart(product)}
+                                  className='btn-add'>
+                                    Add to card
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                    <div className="img-box">
-                      <img src={product.image} alt={product.title} />
-                    </div>
-                    <div className="detail-box">
-                      <h5>{product.title}</h5>
-                      <h6>${product.price.toFixed(2)}</h6>
-                    </div>
-                  </div>
+                ))}
                 </div>
-              ))}
-          </div>
+
           <div className="btn-box">
             <a href="/products">View All Products</a>
           </div>

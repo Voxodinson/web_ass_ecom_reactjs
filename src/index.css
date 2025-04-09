@@ -11,3 +11,188 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.product-grid {
+  width: 100%;
+  display: grid; /* Changed to grid */
+  grid-template-columns: repeat(4, 1fr); /* Force 4 equal columns */
+  gap: 20px;
+  padding: 20px;
+}
+
+.product-card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  width: 100%;
+  transition: transform 0.3s ease;
+  border: 1px solid rgb(240, 240, 240);
+}
+
+.product-image {
+  height: 200px;
+  overflow: hidden;
+  border-bottom: 1px solid #eee;
+}
+
+.product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-image img {
+  transform: scale(1.05);
+}
+
+.product-details {
+  padding: 6px;
+  text-align: start;
+}
+
+.product-title {
+  font-size: 18px;
+  margin-bottom: 5px;
+  color: #333;
+}
+.product-details > h6 {
+  color: red;
+}
+
+.product-details > p {
+  color: gray;
+  font-size: .8rem;
+}
+
+.product-price {
+  font-size: 16px;
+  color: #777;
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.btn-add {
+  background-color: #f7444e;
+  border: none;
+  padding: 8px 0px;
+  color: white;
+  font-weight: bold;
+  text-transform: capitalize;
+  outline: none; /* Already present - this removes the default browser outline */
+}
+
+.btn-add:focus {
+  outline: none; /* Ensures no outline on focus (keyboard navigation) */
+}
+
+.btn-add:active {
+  outline: none; /* Explicitly removes outline on active (mouse click down) state */
+}
+
+.btn-add:hover{
+  background-color: #f3757b;
+}
+
+/* Style for the cart table */
+.cart_area .table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  border: 1px solid #f2f2f2;
+}
+
+.cart_area .table thead th {
+  background-color: #f8f9fa;
+  color: #495057;
+  font-weight: bold;
+  padding: 12px;
+  text-align: left;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.cart_area .table tbody td {
+  padding: 12px;
+  border-bottom: 1px solid #f2f2f2;
+  vertical-align: middle;
+}
+
+.cart_area .table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Style for the product media section */
+.cart_area .media {
+  display: flex;
+  align-items: center;
+}
+
+.cart_area .media .d-flex {
+  margin-right: 15px;
+}
+
+.cart_area .media img {
+  display: block;
+  border-radius: 5px;
+}
+
+.cart_area .media-body p {
+  margin-bottom: 0;
+  color: #212529;
+}
+
+/* Style for quantity controls */
+.cart_area .d-flex.align-items-center.justify-content-center {
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  overflow: hidden;
+  width: fit-content;
+  margin: 0 auto;
+}
+
+.cart_area .d-flex.align-items-center.justify-content-center button {
+  background: none;
+  border: none;
+  padding: 8px 10px;
+  font-size: 1rem;
+  color: #495057;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.2s ease;
+}
+
+.cart_area .d-flex.align-items-center.justify-content-center button:hover {
+  background-color: #e9ecef;
+}
+
+.cart_area .d-flex.align-items-center.justify-content-center span {
+  min-width: 30px;
+  text-align: center;
+  color: #212529;
+}
+
+/* Style for the remove button */
+.cart_area .btn-danger {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  outline: none;
+}
+
+.cart_area .btn-danger:hover {
+  background-color: #c82333;
+}
+
+/* Style for the subtotal row */
+.cart_area .table tbody tr:last-child strong {
+  font-size: 1.1rem;
+  color: #212529;
+}

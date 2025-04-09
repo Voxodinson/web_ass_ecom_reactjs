@@ -1,55 +1,49 @@
 import axios from 'axios';
 
-const BASE_URL = process.env.BASE_URL;   
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
-const apiService = {
-    get: async (endpoint) => {
-        try {
-            const response = await axios.get(`${BASE_URL}/${endpoint}`);
-            return response.data;
-        } 
-        catch (error) 
-        {
-            console.log('Error fetching data:', error);
-            throw error;
-        }
-    },
-
-    post: async (endpoint, data) => {
-        try {
-            const response = await axios.post(`${BASE_URL}/${endpoint}`, data);
-            return response.data;
-        } 
-        catch (error) 
-        {
-            console.log('Error creating data:', error);
-            throw error;
-        }
-    },
-
-    put: async (endpoint, id, data) => {
-        try {
-            const response = await axios.put(`${BASE_URL}/${endpoint}/${id}`, data);
-            return response.data;
-        } 
-        catch (error) 
-        {
-            console.log('Error updating data:', error);
-            throw error;
-        }
-    },
-
-    delete: async (endpoint, id) => {
-        try {
-            const response = await axios.delete(`${BASE_URL}/${endpoint}/${id}`);
-            return response.data;
-        } 
-        catch (error) 
-        {
-            console.log('Error deleting data:', error);
-            throw error;
-        }
-    },
+const handleError = (error) => {
+    if (error.response) {
+        console.error('API Error:', error.response.data?.message || 'API Error');
+    } else if (error.request) {
+        console.error('Network Error: No response from server. Check network connection.');
+    } else {
+        console.error('Request Error:', error.message);
+    }
 };
 
-export default apiService;
+const apiRequest = async (method, endpoint, data = null) => {
+    try {
+        let response;
+        switch (method) {
+            case 'get':
+                response = await axios.get(`${BASE_URL}/${endpoint}`);
+                break;
+            case 'post':
+                response = await axios.post(`${BASE_URL}/${endpoint}`, data);
+                break;
+            case 'put':
+                response = await axios.put(`${BASE_URL}/${endpoint}`, data);
+                break;
+            case 'delete':
+                response = await axios.delete(`${BASE_URL}/${endpoint}`);
+                break;
+            default:
+                throw new Error('Invalid HTTP method');
+        }
+
+        return response.data;
+    } catch (error) {
+        handleError(error);
+        throw error;
+    }
+};
+
+const apiHandle = {
+    get: async (endpoint) => apiRequest('get', endpoint),
+    post: async (endpoint, data) => apiRequest('post', endpoint, data),
+    put: async (endpoint, data) => apiRequest('put', endpoint, data),
+    delete: async (endpoint) => apiRequest('delete', endpoint),
+};
+
+export default apiHandle;
