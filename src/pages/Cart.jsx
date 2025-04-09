@@ -1,11 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-
 const Cart = () => {
   const [cart, setCart] = useState(() => {
-    const savedCart = localStorage.getItem("cart");
-    return savedCart ? JSON.parse(savedCart) : [];
+    try {
+      const savedCart = localStorage.getItem("cart");
+      return savedCart ? JSON.parse(savedCart) : [];
+    } catch (error) {
+      console.error("Error parsing cart data from local storage:", error);
+      return [];
+    }
   });
+
+  // Log the cart from local storage for debugging
+  useEffect(() => {
+    console.log("Cart from localStorage:", localStorage.getItem("cart"));
+  }, []);
 
   // Update cart in localStorage
   const updateLocalStorage = (updatedCart) => {
@@ -20,7 +29,6 @@ const Cart = () => {
         ? { ...item, quantity: Math.max(1, item.quantity + change) }
         : item
     );
-
     updateLocalStorage(updatedCart);
   };
 
@@ -32,16 +40,16 @@ const Cart = () => {
 
   // Calculate subtotal
   const subtotal = cart.reduce(
-    (acc, item) => acc + item.price * item.quantity,
+    (acc, item) => acc + (item.price || 0) * (item.quantity || 0),
     0
   );
 
   return (
-    <section className="cart_area">
+    <section className="cart-page-container">
       <div className="container">
         <h2>Your Cart</h2>
         {cart.length === 0 ? (
-          <div className="text-center">
+          <div className="empty-cart-message">
             <p>Your cart is empty.</p>
             <Link to="/" className="btn btn-primary">
               Continue Shopping
@@ -50,9 +58,9 @@ const Cart = () => {
         ) : (
           <div className="cart_inner">
             <div className="table-responsive">
-              <table className="table">
+              <table className="table cart-table">
                 <thead>
-                  <tr>
+                  <tr className="cart-table-header">
                     <th>Product</th>
                     <th>Price</th>
                     <th>Quantity</th>
@@ -62,51 +70,43 @@ const Cart = () => {
                 </thead>
                 <tbody>
                   {cart.map((item) => (
-                    <tr key={item.id}>
+                    <tr key={item.id} className="">
                       <td>
                         <div className="media">
-                          <div className="d-flex">
+                          <div className="product-image-container">
                             <img
                               src={item.image}
                               alt={item.title}
-                              style={{ width: "50px" }}
                             />
                           </div>
                           <div className="media-body">
-                            <p>{item.title}</p>
+                            <p className="product-cart-title">{item.name}</p>
                           </div>
                         </div>
                       </td>
-                      <td>${item.price.toFixed(2)}</td>
-                      <td>
-                        <div className="d-flex align-items-center justify-content-center">
+                      <td className="product-price">${item.price?.toFixed(2) || "0.00"}</td>
+                      <td className="product-quantity">
+                        <div className="quantity-controls">
                           <button
-                            className="btn btn-sm btn-light"
+                            className="quantity-button"
                             onClick={() => handleQuantityChange(item.id, -1)}
+                            disabled={item.quantity <= 1} // Disable decrement if quantity is 1
                           >
                             -
                           </button>
-                          <span
-                            className="mx-3"
-                            style={{
-                              minWidth: "30px",
-                              textAlign: "center",
-                            }}
-                          >
-                            {item.quantity}
-                          </span>
+                          <span className="quantity-value">{item.quantity}</span>
                           <button
-                            className="btn btn-sm btn-light"
+                            className="quantity-button"
                             onClick={() => handleQuantityChange(item.id, 1)}
                           >
                             +
                           </button>
                         </div>
                       </td>
-                      <td>${(item.price * item.quantity).toFixed(2)}</td>
-                      <td>
+                      <td className="product-total">${((item.price || 0) * (item.quantity || 0))?.toFixed(2) || "0.00"}</td>
+                      <td className="product-actions">
                         <button
-                          className="btn btn-sm btn-danger"
+                          className="remove-cart-item"
                           onClick={() => handleRemoveItem(item.id)}
                         >
                           Remove
@@ -114,11 +114,11 @@ const Cart = () => {
                       </td>
                     </tr>
                   ))}
-                  <tr>
+                  <tr className="cart-subtotal-row">
                     <td></td>
                     <td></td>
                     <td><strong>Subtotal</strong></td>
-                    <td><strong>${subtotal.toFixed(2)}</strong></td>
+                    <td className="subtotal-value"><strong>${subtotal?.toFixed(2) || "0.00"}</strong></td>
                     <td></td>
                   </tr>
                 </tbody>
@@ -129,7 +129,9 @@ const Cart = () => {
                 Continue Shopping
               </Link>
               <Link to="/checkout">
-                <button className="btn btn-primary">Proceed to Checkout</button>
+                <button className="btn btn-primary checkout-button" disabled={cart.length === 0}>
+                  Proceed to Checkout
+                </button>
               </Link>
             </div>
           </div>

@@ -4,7 +4,7 @@ const About = () =>{
     return(
         <div>
            <div>
-           
+           <h3></h3>
             {/* inner page section */}
             <section className="inner_page_head">
               <div className="container_fuild">
