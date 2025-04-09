@@ -13,6 +13,7 @@ import Blog from './component/Blog';
 import Contact from './component/Contact';
 import Cart from './pages/Cart';
 import CheckOut from'./pages/CheckOut';
+import ProductDetailPage from './pages/ProductDetail';
 function App() {
   return (
     <BrowserRouter>
@@ -27,7 +28,7 @@ function App() {
           <Route path="/Contact"element={<Contact/>}/>
           <Route path="/Cart" element={<Cart/>}/> 
           <Route path="/CheckOut" element={<CheckOut/>}/> 
-  
+          <Route path="/product/:id" element={<ProductDetailPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

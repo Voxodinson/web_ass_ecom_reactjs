@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { useNavigate } from "react-router-dom";
-
+import { Trash2 } from "lucide-react";
 const CheckoutForm = () => {
   const [cartItems, setCartItems] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
@@ -112,10 +112,11 @@ const CheckoutForm = () => {
                     <td>${(Number(item.price) || 0) * (item.quantity || 0)?.toFixed(2) || "0.00"}</td>
                     <td>
                       <button
-                        className="btn btn-sm btn-danger"
+                        className="btn btn-sm"
+                        role="button"
                         onClick={() => handleRemoveItem(item.id)}
                       >
-                        Remove
+                        <Trash2 className="text-danger cursor-pointer"/>
                       </button>
                     </td>
                   </tr>

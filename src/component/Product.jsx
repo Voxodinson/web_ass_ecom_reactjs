@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-
+import { Link } from 'react-router-dom';
 function Product() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -98,12 +98,14 @@ function Product() {
           <div className="product-grid">
                 {data.map(product => (
                     <div key={product.id} className="product-card">
-                        <div className="product-image">
-                            <img 
-                            src={product.image} 
-                            alt={product.title} 
-                            />
-                        </div>
+                        <Link to={`/product/${product.id}`}>
+                          <div className="product-image">
+                              <img 
+                                src={product.image} 
+                                alt={product.title} 
+                                />
+                          </div>
+                        </Link>
                         <div className="product-details">
                             <h5 className="product-title">{product.name}</h5>
                             <p>{product.description}</p>
