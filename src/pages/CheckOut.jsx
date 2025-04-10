@@ -78,6 +78,7 @@ const CheckoutForm = () => {
               <thead>
                 <tr>
                   <th>Product</th>
+                  <th>Size</th>
                   <th>Color</th>
                   <th>Quantity</th>
                   <th>Price</th>
@@ -89,6 +90,7 @@ const CheckoutForm = () => {
                 {cartItems.map((item) => (
                   <tr key={item.id}>
                     <td>{item.name}</td>
+                    <td>{item.size}</td>
                     <td>{item.color}</td>
                     <td>
                       <div className="d-flex align-items-center">
