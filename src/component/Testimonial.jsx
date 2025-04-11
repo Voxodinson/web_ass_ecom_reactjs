@@ -1,6 +1,23 @@
 //import { Outlet } from "react-router-dom";
-
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import UserImage from '../assets/images/user_image.jpg';
 const Testimonial = () =>{
+    const [data, setData] = useState([]);
+
+    const fetchData = async () => {
+      try {
+          const result = await axios.get('http://127.0.0.1:8000/api/public/feedbacks');
+          setData(result.data.data);
+      } catch (error) {
+          console.error("Error fetching products:", error);
+      }
+    };  
+  
+    useEffect(() => {
+      fetchData();
+    }, []);
+    
     return(
         <div>
             <div>
@@ -26,73 +43,26 @@ const Testimonial = () =>{
                     </h2>
                 </div>
                 <div id="carouselExample3Controls" className="carousel slide" data-ride="carousel">
-                    <div className="carousel-inner">
-                    <div className="carousel-item active">
+                <div className="carousel-inner">
+                    {data.map((item, index) => (
+                        <div className={`carousel-item ${index === 0 ? "active" : ""}`} key={item.id}>
                         <div className="box col-lg-10 mx-auto">
-                        <div className="img_container">
+                            <div className="img_container">
                             <div className="img-box">
-                            <div className="img_box-inner">
-                                <img src="images/client.jpg" alt />
+                                <div className="img_box-inner">
+                                <img src={item.image || UserImage} alt="client" />
+                                {/* Replace with item.image if your API returns image URLs */}
+                                </div>
                             </div>
                             </div>
-                        </div>
-                        <div className="detail-box">
-                            <h5>
-                            Anna Trevor
-                            </h5>
-                            <h6>
-                            Customer
-                            </h6>
-                            <p>
-                            Dignissimos reprehenderit repellendus nobis error quibusdam? Atque animi sint unde quis reprehenderit, et, perspiciatis, debitis totam est deserunt eius officiis ipsum ducimus ad labore modi voluptatibus accusantium sapiente nam! Quaerat.
-                            </p>
-                        </div>
-                        </div>
-                    </div>
-                    <div className="carousel-item">
-                        <div className="box col-lg-10 mx-auto">
-                        <div className="img_container">
-                            <div className="img-box">
-                            <div className="img_box-inner">
-                                <img src="images/client.jpg" alt />
-                            </div>
+                            <div className="detail-box">
+                            <h5>{item.user_name || '------'}</h5>
+                            <h6>{item.title}</h6>
+                            <p>{item.description}</p>
                             </div>
                         </div>
-                        <div className="detail-box">
-                            <h5>
-                            Anna Trevor
-                            </h5>
-                            <h6>
-                            Customer
-                            </h6>
-                            <p>
-                            Dignissimos reprehenderit repellendus nobis error quibusdam? Atque animi sint unde quis reprehenderit, et, perspiciatis, debitis totam est deserunt eius officiis ipsum ducimus ad labore modi voluptatibus accusantium sapiente nam! Quaerat.
-                            </p>
                         </div>
-                        </div>
-                    </div>
-                    <div className="carousel-item">
-                        <div className="box col-lg-10 mx-auto">
-                        <div className="img_container">
-                            <div className="img-box">
-                            <div className="img_box-inner">
-                                <img src="images/client.jpg" alt />
-                            </div>
-                            </div>
-                        </div>
-                        <div className="detail-box">
-                            <h5>
-                            Anna Trevor
-                            </h5>
-                            <h6>
-                            Customer
-                            </h6>
-                            <p>
-                            Dignissimos reprehenderit repellendus nobis error quibusdam? Atque animi sint unde quis reprehenderit, et, perspiciatis, debitis totam est deserunt eius officiis ipsum ducimus ad labore modi voluptatibus accusantium sapiente nam! Quaerat.
-                            </p>
-                        </div>
-                        </div>
-                    </div>
+                    ))}
                     </div>
                     <div className="carousel_btn_box">
                     <a className="carousel-control-prev" href="#carouselExample3Controls" role="button" data-slide="prev">

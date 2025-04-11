@@ -1,13 +1,11 @@
 // import React from 'react';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Outlet } from 'react-router-dom';
-import apiHandle from '../services/api_handle';
-import "../index.css"
+import UserImage from '../assets/images/user_image.jpg';
+import "../index.css";
+import { NavLink } from "react-router-dom";
 function Home() {
   const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   const fetchData = async () => {
     try {
@@ -18,10 +16,21 @@ function Home() {
         console.error("Error fetching products:", error);
     }
   };  
+  const [dataFeedback, setDataFeedback] = useState([]);
+
+  const fetchDataFeedback = async () => {
+    try {
+        const result = await axios.get('http://127.0.0.1:8000/api/public/feedbacks');
+        setDataFeedback(result.data.data);
+    } catch (error) {
+        console.error("Error fetching products:", error);
+    }
+  };  
+
   useEffect(() => {
     fetchData();
+    fetchDataFeedback();
   }, []);
-
   return (
 <>
     <div className="hero_area">
@@ -50,9 +59,9 @@ function Home() {
                         Explicabo esse amet tempora quibusdam laudantium, laborum eaque magnam fugiat hic? Esse dicta aliquid error repudiandae earum suscipit fugiat molestias, veniam, vel architecto veritatis delectus repellat modi impedit sequi.
                         </p>
                         <div className="btn-box">
-                        <a href className="btn1">
-                            Shop Now
-                        </a>
+                        <NavLink exact to="/Product" className="nav-link" activeClassName="active">
+                            Home
+                        </NavLink>
                         </div>
                     </div>
                     </div>
@@ -75,9 +84,9 @@ function Home() {
                         Explicabo esse amet tempora quibusdam laudantium, laborum eaque magnam fugiat hic? Esse dicta aliquid error repudiandae earum suscipit fugiat molestias, veniam, vel architecto veritatis delectus repellat modi impedit sequi.
                         </p>
                         <div className="btn-box">
-                        <a href className="btn1">
-                            Shop Now
-                        </a>
+                        <NavLink exact to="/Product" className="nav-link" activeClassName="active">
+                    Home
+                  </NavLink>
                         </div>
                     </div>
                     </div>
@@ -100,9 +109,9 @@ function Home() {
                         Explicabo esse amet tempora quibusdam laudantium, laborum eaque magnam fugiat hic? Esse dicta aliquid error repudiandae earum suscipit fugiat molestias, veniam, vel architecto veritatis delectus repellat modi impedit sequi.
                         </p>
                         <div className="btn-box">
-                        <a href className="btn1">
-                            Shop Now
-                        </a>
+                        <NavLink exact to="/Product" className="nav-link" activeClassName="active">
+                    Home
+                  </NavLink>
                         </div>
                     </div>
                     </div>
@@ -400,7 +409,7 @@ function Home() {
                 </h2>
             </div>
             <div className="product-grid">
-                {data.map(product => (
+                {dataFeedback.map(product => (
                     <div key={product.id} className="product-card">
                         <div className="product-image">
                             <img 
@@ -461,72 +470,25 @@ function Home() {
         </div>
         <div id="carouselExample3Controls" className="carousel slide" data-ride="carousel">
             <div className="carousel-inner">
-            <div className="carousel-item active">
-                <div className="box col-lg-10 mx-auto">
-                <div className="img_container">
-                    <div className="img-box">
-                    <div className="img_box-inner">
-                        <img src="images/client.jpg" alt />
-                    </div>
-                    </div>
-                </div>
-                <div className="detail-box">
-                    <h5>
-                    Anna Trevor
-                    </h5>
-                    <h6>
-                    Customer
-                    </h6>
-                    <p>
-                    Dignissimos reprehenderit repellendus nobis error quibusdam? Atque animi sint unde quis reprehenderit, et, perspiciatis, debitis totam est deserunt eius officiis ipsum ducimus ad labore modi voluptatibus accusantium sapiente nam! Quaerat.
-                    </p>
-                </div>
-                </div>
-            </div>
-            <div className="carousel-item">
-                <div className="box col-lg-10 mx-auto">
-                <div className="img_container">
-                    <div className="img-box">
-                    <div className="img_box-inner">
-                        <img src="images/client.jpg" alt />
-                    </div>
-                    </div>
-                </div>
-                <div className="detail-box">
-                    <h5>
-                    Anna Trevor
-                    </h5>
-                    <h6>
-                    Customer
-                    </h6>
-                    <p>
-                    Dignissimos reprehenderit repellendus nobis error quibusdam? Atque animi sint unde quis reprehenderit, et, perspiciatis, debitis totam est deserunt eius officiis ipsum ducimus ad labore modi voluptatibus accusantium sapiente nam! Quaerat.
-                    </p>
-                </div>
-                </div>
-            </div>
-            <div className="carousel-item">
-                <div className="box col-lg-10 mx-auto">
-                <div className="img_container">
-                    <div className="img-box">
-                    <div className="img_box-inner">
-                        <img src="images/client.jpg" alt />
-                    </div>
-                    </div>
-                </div>
-                <div className="detail-box">
-                    <h5>
-                    Anna Trevor
-                    </h5>
-                    <h6>
-                    Customer
-                    </h6>
-                    <p>
-                    Dignissimos reprehenderit repellendus nobis error quibusdam? Atque animi sint unde quis reprehenderit, et, perspiciatis, debitis totam est deserunt eius officiis ipsum ducimus ad labore modi voluptatibus accusantium sapiente nam! Quaerat.
-                    </p>
-                </div>
-                </div>
-            </div>
+            {data.map((item, index) => (
+                        <div className={`carousel-item ${index === 0 ? "active" : ""}`} key={item.id}>
+                        <div className="box col-lg-10 mx-auto">
+                            <div className="img_container">
+                            <div className="img-box">
+                                <div className="img_box-inner">
+                                <img src={item.image || UserImage} alt="client" />
+                                {/* Replace with item.image if your API returns image URLs */}
+                                </div>
+                            </div>
+                            </div>
+                            <div className="detail-box">
+                            <h5>{item.user_name || '------'}</h5>
+                            <h6>{item.title}</h6>
+                            <p>{item.description}</p>
+                            </div>
+                        </div>
+                        </div>
+                    ))}
             </div>
             <div className="carousel_btn_box">
             <a className="carousel-control-prev" href="#carouselExample3Controls" role="button" data-slide="prev">

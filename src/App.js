@@ -14,6 +14,8 @@ import Contact from './component/Contact';
 import Cart from './pages/Cart';
 import CheckOut from'./pages/CheckOut';
 import ProductDetailPage from './pages/ProductDetail';
+import FeedbackPage from './pages/FeedbackPage';
+import LoginPage from './pages/LoginPage';
 function App() {
   return (
     <BrowserRouter>
@@ -28,6 +30,8 @@ function App() {
           <Route path="/Contact"element={<Contact/>}/>
           <Route path="/Cart" element={<Cart/>}/> 
           <Route path="/CheckOut" element={<CheckOut/>}/> 
+          <Route path="/feedback" element={<FeedbackPage/>}/> 
+          <Route path="/login" element={<LoginPage/>}/> 
           <Route path="/product/:id" element={<ProductDetailPage />} />
         </Route>
       </Routes>

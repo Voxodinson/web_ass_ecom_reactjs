@@ -108,7 +108,9 @@ function Product() {
                         </Link>
                         <div className="product-details">
                             <h5 className="product-title">{product.name}</h5>
-                            <p>{product.description}</p>
+                            <p className="text-truncate d-block" style={{ maxWidth: '100%' }}>
+                              {product.description}
+                            </p>
                             <h6 className="product-price">${product.price}</h6>
                         </div>
                         <div className="product-actions">
