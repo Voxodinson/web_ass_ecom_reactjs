@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import UserImage from '../assets/images/user_image.jpg';
 import "../index.css";
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 function Home() {
   const [data, setData] = useState([]);
 
@@ -27,6 +27,19 @@ function Home() {
     }
   };  
 
+  const handleAddToCart = (product) => {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const existingItem = cart.find((item) => item.id === product.id);
+
+    if (existingItem) {
+      existingItem.quantity += 1; // Increment quantity if product already exists in the cart
+    } else {
+      cart.push({ ...product, quantity: 1 }); // Add new product with quantity 1
+    }
+
+    localStorage.setItem('cart', JSON.stringify(cart));
+    alert('Product added to cart!');
+  };
   useEffect(() => {
     fetchData();
     fetchDataFeedback();
@@ -409,22 +422,28 @@ function Home() {
                 </h2>
             </div>
             <div className="product-grid">
-                {dataFeedback.map(product => (
+            {data.map(product => (
                     <div key={product.id} className="product-card">
-                        <div className="product-image">
-                            <img 
-                            src={product.image} 
-                            alt={product.title} 
-                            />
-                        </div>
+                        <Link to={`/product/${product.id}`}>
+                          <div className="product-image">
+                              <img 
+                                src={product.image} 
+                                alt={product.title} 
+                                />
+                          </div>
+                        </Link>
                         <div className="product-details">
                             <h5 className="product-title">{product.name}</h5>
-                            <p>{product.description}</p>
+                            <p className="text-truncate d-block" style={{ maxWidth: '100%' }}>
+                              {product.description}
+                            </p>
                             <h6 className="product-price">${product.price}</h6>
                         </div>
                         <div className="product-actions">
                             <div className="action-buttons">
-                                <button className='btn-add'>
+                                <button 
+                                  onClick={() => handleAddToCart(product)}
+                                  className='btn-add'>
                                     Add to card
                                 </button>
                             </div>
@@ -434,7 +453,9 @@ function Home() {
                 </div>
 
             <div className="btn-box">
-                <a href="/products">View All products</a>
+            <NavLink to="/product" className="nav-link" activeClassName="active">
+                    View all our products
+                  </NavLink>
             </div>
         </div>
     </section>
