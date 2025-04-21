@@ -1,92 +1,134 @@
 import { NavLink, useLocation } from "react-router-dom";
 import "../../src/index.css";
+import { useState } from "react";
 
 const Narbar = () => {
   const location = useLocation();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
 
   return (
     <div>
       <header className="header_section">
         <div className="container">
-          <nav className="navbar navbar-expand-lg custom_nav-container ">
-            <a className="navbar-brand" href="/Home">
-              <img width={250} src="images/logo.png" alt="#" />
-            </a>
+          <nav className="navbar navbar-expand-lg custom_nav-container">
+            <NavLink className="navbar-brand" to="/">
+              <img width={250} src="images/logo.png" alt="Logo" />
+            </NavLink>
             <button
               className="navbar-toggler"
               type="button"
-              data-toggle="collapse"
-              data-target="#navbarSupportedContent"
+              data-bs-toggle="collapse"
+              data-bs-target="#navbarSupportedContent"
               aria-controls="navbarSupportedContent"
-              aria-expanded="false"
+              aria-expanded={!isDropdownOpen ? "false" : "true"}
               aria-label="Toggle navigation"
+              onClick={toggleDropdown}
             >
-              <span className=""></span>
+              <span></span>
             </button>
-            <div className="collapse navbar-collapse" id="navbarSupportedContent">
+            <div className={`collapse navbar-collapse ${isDropdownOpen ? "show" : ""}`} id="navbarSupportedContent">
               <ul className="navbar-nav">
                 <li className="nav-item">
-                  <NavLink exact to="/" className="nav-link" activeClassName="active">
+                  <NavLink
+                    to="/"
+                    className={({ isActive }) => `nav-link${isActive ? " active" : ""}`}
+                    onClick={() => setIsDropdownOpen(false)}
+                  >
                     Home
                   </NavLink>
                 </li>
+
+                <li className="nav-item">
+                  <NavLink
+                    to="/product"
+                    className={({ isActive }) => `nav-link${isActive ? " active" : ""}`}
+                    onClick={() => setIsDropdownOpen(false)}
+                  >
+                    Products
+                  </NavLink>
+                </li>
+
+                <li className="nav-item">
+                  <NavLink
+                    to="/Blog"
+                    className={({ isActive }) => `nav-link${isActive ? " active" : ""}`}
+                    onClick={() => setIsDropdownOpen(false)}
+                  >
+                    Blog
+                  </NavLink>
+                </li>
+
                 <li className="nav-item dropdown">
                   <a
                     className={`nav-link dropdown-toggle ${
-                      location.pathname === "/About" || location.pathname === "/testimonial" ? "active" : ""
+                      location.pathname === "/About" || location.pathname === "/testimonial" || location.pathname === "/feedback" || location.pathname === "/Contact" ? "active" : ""
                     }`}
                     href="#"
-                    data-toggle="dropdown"
                     role="button"
-                    aria-haspopup="true"
-                    aria-expanded="true"
+                    data-bs-toggle="dropdown"
+                    aria-expanded={isDropdownOpen ? "true" : "false"}
+                    onClick={toggleDropdown}
                   >
                     <span className="nav-label">
-                      Pages <span className="caret" />
+                      More about us <span className="caret" />
                     </span>
                   </a>
-                  <ul className="dropdown-menu">
+                  <ul className={`dropdown-menu w-fit ${isDropdownOpen ? "show" : ""}`}>
                     <li>
-                      <NavLink to="/About" className="dropdown-item" activeClassName="active">
+                      <NavLink
+                        to="/About"
+                        className={({ isActive }) => `dropdown-item${isActive ? " active" : ""}`}
+                        onClick={() => setIsDropdownOpen(false)}
+                      >
                         About
                       </NavLink>
                     </li>
                     <li>
-                      <NavLink to="/testimonial" className="dropdown-item" activeClassName="active">
+                      <NavLink
+                        to="/testimonial"
+                        className={({ isActive }) => `dropdown-item${isActive ? " active" : ""}`}
+                        onClick={() => setIsDropdownOpen(false)}
+                      >
                         Testimonial
                       </NavLink>
                     </li>
-                    <li className="nav-item">
-                      <NavLink to="/feedback" className="dropdown-item" activeClassName="active">
-                        Contact
+                    <li>
+                      <NavLink
+                        to="/feedback"
+                        className={({ isActive }) => `dropdown-item${isActive ? " active" : ""}`}
+                        onClick={() => setIsDropdownOpen(false)}
+                      >
+                        Feedback
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        to="/Contact"
+                        className={({ isActive }) => `dropdown-item${isActive ? " active" : ""}`}
+                        onClick={() => setIsDropdownOpen(false)}
+                      >
+                        Contact Us
                       </NavLink>
                     </li>
                   </ul>
                 </li>
+
                 <li className="nav-item">
-                  <NavLink to="/product" className="nav-link" activeClassName="active">
-                    Products
-                  </NavLink>
-                </li>
-                <li className="nav-item">
-                  <NavLink to="/Blog" className="nav-link" activeClassName="active">
-                    Blog
-                  </NavLink>
-                </li>
-                <li className="nav-item">
-                  <NavLink to="/Contact" className="nav-link" activeClassName="active">
-                    Contact
-                  </NavLink>
-                </li>
-                
-                <li className="nav-item">
-                  <NavLink to="/CheckOut" className="nav-link" activeClassName="active">
-                    {/* Keep your SVG icon here */}
+                  <NavLink
+                    to="/CheckOut"
+                    className={({ isActive }) => `nav-link${isActive ? " active" : ""}`}
+                    onClick={() => setIsDropdownOpen(false)}
+                  >
                     🛒
                   </NavLink>
                 </li>
+
                 <form className="form-inline">
-                  <button className="btn  my-2 my-sm-0 nav_search-btn" type="submit">
+                  <button className="btn my-2 my-sm-0 nav_search-btn" type="submit">
                     <i className="fa fa-search" aria-hidden="true" />
                   </button>
                 </form>
