@@ -126,9 +126,6 @@ function Product() {
                 ))}
                 </div>
 
-          <div className="btn-box">
-            <a href="/products">View All Products</a>
-          </div>
         </div>
       </section>
       {/* End Product Section */}
