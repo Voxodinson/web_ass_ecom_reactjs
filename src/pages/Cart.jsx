@@ -11,18 +11,15 @@ const Cart = () => {
     }
   });
 
-  // Log the cart from local storage for debugging
   useEffect(() => {
     console.log("Cart from localStorage:", localStorage.getItem("cart"));
   }, []);
 
-  // Update cart in localStorage
   const updateLocalStorage = (updatedCart) => {
     setCart(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
 
-  // Handle quantity updates
   const handleQuantityChange = (id, change) => {
     const updatedCart = cart.map((item) =>
       item.id === id
@@ -32,13 +29,11 @@ const Cart = () => {
     updateLocalStorage(updatedCart);
   };
 
-  // Remove item from cart
   const handleRemoveItem = (id) => {
     const updatedCart = cart.filter((item) => item.id !== id);
     updateLocalStorage(updatedCart);
   };
 
-  // Calculate subtotal
   const subtotal = cart.reduce(
     (acc, item) => acc + (item.price || 0) * (item.quantity || 0),
     0
@@ -90,7 +85,7 @@ const Cart = () => {
                           <button
                             className="quantity-button"
                             onClick={() => handleQuantityChange(item.id, -1)}
-                            disabled={item.quantity <= 1} // Disable decrement if quantity is 1
+                            disabled={item.quantity <= 1} 
                           >
                             -
                           </button>

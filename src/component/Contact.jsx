@@ -19,10 +19,10 @@ function Contact() {
 
     emailjs
       .sendForm(
-        'service_2yb6yxe',  // replace with your service ID
-        'template_f1dp6uy',  // replace with your template ID
+        'service_2yb6yxe',  
+        'template_f1dp6uy',
         e.target,
-        'a4wxbYdyVmnoiMbYY'      // replace with your user ID
+        'a4wxbYdyVmnoiMbYY'
       )
       .then(
         (result) => {
@@ -35,13 +35,11 @@ function Contact() {
         }
       );
 
-    // Reset form fields after submission
     setFormData({ name: '', email: '', subject: '', message: '' });
   };
 
   return (
     <div>
-      {/* Inner Page Section */}
       <section className="inner_page_head">
         <div className="container_fuild">
           <div className="row">
@@ -54,7 +52,6 @@ function Contact() {
         </div>
       </section>
 
-      {/* Why Section */}
       <section className="why_section layout_padding">
         <div className="container">
           <div className="row">
