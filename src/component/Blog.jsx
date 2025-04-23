@@ -265,8 +265,7 @@ function Blog() {
                 </div>
                 </div>
             </section>
-            {/* end why section */}
-            {/* footer section */}
+            
             <footer className="footer_section">
                 <div className="container">
                 <div className="row">

@@ -45,7 +45,7 @@ function Product() {
     }
 
     localStorage.setItem('cart', JSON.stringify(cart));
-    window.location.href = '/checkout'; // Redirect to the checkout page
+    window.location.href = '/checkout';
   };
 
   const [successMessage, setSuccessMessage] = useState('');
@@ -63,10 +63,8 @@ function Product() {
 
     localStorage.setItem('cart', JSON.stringify(cartItems));
 
-    // Set the success message
     setSuccessMessage(`${product.name} added to cart!`);
 
-    // Clear the success message after a short delay (e.g., 3 seconds)
     setTimeout(() => {
       setSuccessMessage('');
     }, 3000);
@@ -74,7 +72,6 @@ function Product() {
 
   return (
     <>
-      {/* Inner Page Section */}
       <section className="inner_page_head">
         <div className="container_fuild">
           <div className="row">
@@ -87,7 +84,6 @@ function Product() {
         </div>
       </section>
 
-      {/* Product Section */}
       <section className="product_section layout_padding">
         <div className="container">
           <div className="heading_container heading_center">
@@ -128,9 +124,6 @@ function Product() {
 
         </div>
       </section>
-      {/* End Product Section */}
-
-      {/* Footer Section */}
       <footer className="footer_section">
         <div className="container">
           <div className="row">

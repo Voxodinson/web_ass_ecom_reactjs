@@ -21,7 +21,6 @@ const Testimonial = () =>{
     return(
         <div>
             <div>
-            {/* inner page section */}
             <section className="inner_page_head">
                 <div className="container_fuild">
                 <div className="row">
@@ -33,8 +32,6 @@ const Testimonial = () =>{
                 </div>
                 </div>
             </section>
-            {/* end inner page section */}
-            {/* client section */}
             <section className="client_section layout_padding">
                 <div className="container">
                 <div className="heading_container heading_center">
@@ -51,7 +48,6 @@ const Testimonial = () =>{
                             <div className="img-box">
                                 <div className="img_box-inner">
                                 <img src={item.image || UserImage} alt="client" />
-                                {/* Replace with item.image if your API returns image URLs */}
                                 </div>
                             </div>
                             </div>
@@ -77,8 +73,6 @@ const Testimonial = () =>{
                 </div>
                 </div>
             </section>
-            {/* end client section */}
-            {/* footer section */}
             <footer className="footer_section">
                 <div className="container">
                 <div className="row">

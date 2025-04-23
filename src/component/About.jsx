@@ -8,7 +8,7 @@ const About = () => {
   const fetchData = async () => {
     try {
       const result = await axios.get('http://127.0.0.1:8000/api/public/companies/1');
-      setData(result.data); // Access the data property of the Axios response
+      setData(result.data);
       console.log(result);
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -19,11 +19,10 @@ const About = () => {
     fetchData();
   }, []);
 
-  // Safely access the phone numbers after checking if data exists
   const phoneNumbers = data ? (Array.isArray(data.phone) ? data.phone.join(', ') : data.phone || 'N/A') : 'Loading...';
 
   if (!data) {
-    return <div>Loading company data...</div>; // Or a more appropriate loading indicator
+    return <div>Loading company data...</div>;
   }
   return (
     <div>

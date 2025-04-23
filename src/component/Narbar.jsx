@@ -2,8 +2,8 @@ import { NavLink, useLocation, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import "../../src/index.css";
-import "bootstrap/dist/js/bootstrap.bundle.min"; // Bootstrap JS
-import * as bootstrap from "bootstrap"; // Import bootstrap for modal functionality
+import "bootstrap/dist/js/bootstrap.bundle.min";
+import * as bootstrap from "bootstrap";
 
 const Narbar = () => {
   const location = useLocation();
@@ -141,7 +141,6 @@ const Narbar = () => {
         </div>
       </header>
 
-      {/* Search Modal */}
       <div
         className="modal fade"
         id="searchModal"
@@ -180,18 +179,15 @@ const Narbar = () => {
                       to={`/product/${product.id}`}
                       className="d-flex align-items-center border-bottom pb-2 text-decoration-none text-dark w-100"
                       onClick={() => {
-                        // Close all open modals
                         const modalEls = document.querySelectorAll('.modal.show');
                         modalEls.forEach((el) => {
                           const modal = bootstrap.Modal.getInstance(el) || new bootstrap.Modal(el);
                           modal.hide();
                         });
                       
-                        // Remove modal backdrop manually
                         const backdrops = document.querySelectorAll('.modal-backdrop');
                         backdrops.forEach((bd) => bd.parentNode.removeChild(bd));
-                      
-                        // Remove body modal-open class if it's there
+        
                         document.body.classList.remove('modal-open');
                         document.body.style.overflow = '';
                         document.body.style.paddingRight = '';
