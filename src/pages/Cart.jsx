@@ -1,19 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { Minus, Plus, Trash2 } from "lucide-react";
+
 const Cart = () => {
   const [cart, setCart] = useState(() => {
     try {
       const savedCart = localStorage.getItem("cart");
-      return savedCart ? JSON.parse(savedCart) : [];
+      const parsedCart = savedCart ? JSON.parse(savedCart) : [];
+      return parsedCart.map(item => ({
+        ...item,
+        price: Number(item.price) || 0,
+        quantity: Number(item.quantity) || 1,
+      }));
     } catch (error) {
       console.error("Error parsing cart data from local storage:", error);
       return [];
     }
   });
-
-  useEffect(() => {
-    console.log("Cart from localStorage:", localStorage.getItem("cart"));
-  }, []);
 
   const updateLocalStorage = (updatedCart) => {
     setCart(updatedCart);
@@ -23,7 +26,7 @@ const Cart = () => {
   const handleQuantityChange = (id, change) => {
     const updatedCart = cart.map((item) =>
       item.id === id
-        ? { ...item, quantity: Math.max(1, item.quantity + change) }
+        ? { ...item, quantity: Math.max(1, Number(item.quantity) + change) }
         : item
     );
     updateLocalStorage(updatedCart);
@@ -35,7 +38,7 @@ const Cart = () => {
   };
 
   const subtotal = cart.reduce(
-    (acc, item) => acc + (item.price || 0) * (item.quantity || 0),
+    (acc, item) => acc + Number(item.price) * Number(item.quantity),
     0
   );
 
@@ -65,46 +68,41 @@ const Cart = () => {
                 </thead>
                 <tbody>
                   {cart.map((item) => (
-                    <tr key={item.id} className="">
+                    <tr key={item.id}>
                       <td>
                         <div className="media">
-                          <div className="product-image-container">
-                            <img
-                              src={item.image}
-                              alt={item.title}
-                            />
-                          </div>
                           <div className="media-body">
                             <p className="product-cart-title">{item.name}</p>
                           </div>
                         </div>
                       </td>
-                      <td className="product-price">${item.price?.toFixed(2) || "0.00"}</td>
+                      <td className="product-price">${Number(item.price).toFixed(2)}</td>
                       <td className="product-quantity">
-                        <div className="quantity-controls">
+                        <div className="quantity-controls d-flex align-items-center gap-2">
                           <button
-                            className="quantity-button"
+                            className="btn btn-sm btn-outline-secondary"
                             onClick={() => handleQuantityChange(item.id, -1)}
-                            disabled={item.quantity <= 1} 
+                            disabled={item.quantity <= 1}
                           >
-                            -
+                            <Minus size={16} />
                           </button>
                           <span className="quantity-value">{item.quantity}</span>
                           <button
-                            className="quantity-button"
+                            className="btn btn-sm btn-outline-secondary"
                             onClick={() => handleQuantityChange(item.id, 1)}
                           >
-                            +
+                            <Plus size={16} />
                           </button>
                         </div>
                       </td>
-                      <td className="product-total">${((item.price || 0) * (item.quantity || 0))?.toFixed(2) || "0.00"}</td>
+                      <td className="product-total">${(Number(item.price) * Number(item.quantity)).toFixed(2)}</td>
                       <td className="product-actions">
                         <button
-                          className="remove-cart-item"
+                          className="btn btn-sm btn-outline-danger"
                           onClick={() => handleRemoveItem(item.id)}
+                          title="Remove Item"
                         >
-                          Remove
+                          <Trash2 size={16} />
                         </button>
                       </td>
                     </tr>
@@ -113,14 +111,14 @@ const Cart = () => {
                     <td></td>
                     <td></td>
                     <td><strong>Subtotal</strong></td>
-                    <td className="subtotal-value"><strong>${subtotal?.toFixed(2) || "0.00"}</strong></td>
+                    <td className="subtotal-value"><strong>${subtotal.toFixed(2)}</strong></td>
                     <td></td>
                   </tr>
                 </tbody>
               </table>
             </div>
             <div className="checkout_btn_inner text-right">
-              <Link to="/" className="btn btn-secondary">
+              <Link to="/" className="btn btn-secondary me-2">
                 Continue Shopping
               </Link>
               <Link to="/checkout">

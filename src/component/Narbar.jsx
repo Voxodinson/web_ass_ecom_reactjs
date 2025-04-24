@@ -4,16 +4,25 @@ import axios from "axios";
 import "../../src/index.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import * as bootstrap from "bootstrap";
+import { ShoppingCart } from "lucide-react";
 
-const Narbar = () => {
+const Navbar = () => {
   const location = useLocation();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [results, setResults] = useState([]);
+  const [user, setUser] = useState(null);
+  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
+  const [cartQty, setCartQty] = useState(0);
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
+
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    setUser(storedUser);
+  }, []);
 
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
@@ -29,6 +38,28 @@ const Narbar = () => {
 
     return () => clearTimeout(delayDebounce);
   }, [searchTerm]);
+  const getCartLength = () => {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    return cart.length;  // Return the number of items in the cart
+  };
+  useEffect(() => {
+    // Get the cart length on initial load
+    const cartLength = getCartLength();
+    setCartQty(cartLength);
+
+    // Listen for storage changes (in case it's updated in another tab)
+    window.addEventListener("storage", () => {
+      const updatedCartLength = getCartLength();
+      setCartQty(updatedCartLength);
+    });
+
+    return () => {
+      window.removeEventListener("storage", () => {
+        const updatedCartLength = getCartLength();
+        setCartQty(updatedCartLength);
+      });
+    };
+  }, []);
 
   return (
     <div>
@@ -86,7 +117,14 @@ const Narbar = () => {
 
                 <li className="nav-item dropdown">
                   <a
-                    className={`nav-link dropdown-toggle ${location.pathname === "/About" || location.pathname === "/testimonial" || location.pathname === "/feedback" || location.pathname === "/Contact" ? "active" : ""}`}
+                    className={`nav-link dropdown-toggle ${
+                      location.pathname === "/About" ||
+                      location.pathname === "/testimonial" ||
+                      location.pathname === "/feedback" ||
+                      location.pathname === "/Contact"
+                        ? "active"
+                        : ""
+                    }`}
                     href="#"
                     role="button"
                     data-bs-toggle="dropdown"
@@ -118,13 +156,25 @@ const Narbar = () => {
                     </li>
                   </ul>
                 </li>
-
                 <li className="nav-item">
-                  <NavLink to="/CheckOut" className={({ isActive }) => `nav-link${isActive ? " active" : ""}`} onClick={() => setIsDropdownOpen(false)}>
-                    🛒
+                  <NavLink to="/order-history" className={({ isActive }) => `nav-link${isActive ? " active" : ""}`} onClick={() => setIsDropdownOpen(false)}>
+                    Orders
                   </NavLink>
                 </li>
-
+                <li className="nav-item position-relative">
+                  <NavLink
+                    to="/cart"
+                    className={({ isActive }) => `nav-link${isActive ? " active" : ""}`}
+                    onClick={() => setIsDropdownOpen(false)}
+                  >
+                    <ShoppingCart color="#ff0000" />
+                    {cartQty > 0 && (
+                      <span style={{ fontSize: "1rem" }}>
+                        ({cartQty})
+                      </span>
+                    )}
+                  </NavLink>
+                </li>
                 <li className="nav-item">
                   <button
                     className="btn my-2 my-sm-0 nav_search-btn"
@@ -135,12 +185,86 @@ const Narbar = () => {
                     <i className="fa fa-search" aria-hidden="true" />
                   </button>
                 </li>
+
+                {/* User Profile Dropdown */}
+                <li className="nav-item dropdown">
+                  <a
+                    className="nav-link dropdown-toggle d-flex align-items-center"
+                    href="#"
+                    id="userDropdown"
+                    role="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setIsUserDropdownOpen((prev) => !prev);
+                    }}
+                  >
+                    {user ? (
+                      <>
+                        <img
+                          src={user.profile || "https://via.placeholder.com/30"}
+                          alt="User"
+                          className="rounded-circle me-2 ml-2"
+                          style={{ width: "30px", height: "30px", objectFit: "cover" }}
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <i className="fa fa-user-circle me-1" style={{ fontSize: '25px' }}></i>
+                      </>
+                    )}
+                  </a>
+                  <ul
+                    className={`dropdown-menu dropdown-menu-start ${isUserDropdownOpen ? "show" : ""}`}
+                    aria-labelledby="userDropdown"
+                    style={{ width: "300px" }}
+                  >
+                    {user ? (
+                      <>
+                        <li className="dropdown-item-text">👋 Hello, {user.name}</li>
+                        <li>
+                          <button
+                            className="dropdown-item"
+                            onClick={() => {
+                              localStorage.removeItem("user");
+                              setUser(null);
+                              setIsUserDropdownOpen(false);
+                            }}
+                          >
+                            Logout
+                          </button>
+                        </li>
+                      </>
+                    ) : (
+                      <>
+                        <li>
+                          <Link
+                            to="/login"
+                            className="dropdown-item"
+                            onClick={() => setIsUserDropdownOpen(false)}
+                          >
+                            Login
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            to="/register"
+                            className="dropdown-item"
+                            onClick={() => setIsUserDropdownOpen(false)}
+                          >
+                            Register
+                          </Link>
+                        </li>
+                      </>
+                    )}
+                  </ul>
+                </li>
               </ul>
             </div>
           </nav>
         </div>
       </header>
 
+      {/* Search Modal */}
       <div
         className="modal fade"
         id="searchModal"
@@ -173,7 +297,7 @@ const Narbar = () => {
                 {results.map((product) => (
                   <li
                     key={product.id}
-                    className="list-group-item  d-flex align-items-center"
+                    className="list-group-item d-flex align-items-center"
                   >
                     <Link
                       to={`/product/${product.id}`}
@@ -184,15 +308,14 @@ const Narbar = () => {
                           const modal = bootstrap.Modal.getInstance(el) || new bootstrap.Modal(el);
                           modal.hide();
                         });
-                      
+
                         const backdrops = document.querySelectorAll('.modal-backdrop');
                         backdrops.forEach((bd) => bd.parentNode.removeChild(bd));
-        
+
                         document.body.classList.remove('modal-open');
                         document.body.style.overflow = '';
                         document.body.style.paddingRight = '';
-                      
-                        // Optionally clear search
+
                         setSearchTerm('');
                         setResults([]);
                       }}
@@ -217,4 +340,4 @@ const Narbar = () => {
   );
 };
 
-export default Narbar;
+export default Navbar;
