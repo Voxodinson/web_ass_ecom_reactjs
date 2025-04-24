@@ -16,6 +16,7 @@ import CheckOut from'./pages/CheckOut';
 import ProductDetailPage from './pages/ProductDetail';
 import FeedbackPage from './pages/FeedbackPage';
 import LoginPage from './pages/LoginPage';
+import OrderHistory from './pages/OrderHistory';
 function App() {
   return (
     <BrowserRouter>
@@ -32,6 +33,7 @@ function App() {
           <Route path="/CheckOut" element={<CheckOut/>}/> 
           <Route path="/feedback" element={<FeedbackPage/>}/> 
           <Route path="/login" element={<LoginPage/>}/> 
+          <Route path="/order-history" element={<OrderHistory/>}/> 
           <Route path="/product/:id" element={<ProductDetailPage />} />
         </Route>
       </Routes>
